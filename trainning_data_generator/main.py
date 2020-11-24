@@ -7,8 +7,10 @@ import time
 def generate_random_matrix(rows,cols,levels,force = True,maxstep = 10000):
     files = os.listdir('./')
     for data_file in files:
-            if("matrix" in data_file and force == False):
+            if("matrix_" in data_file and force == False):
                 return None
+            else
+                os.remove(data_file)
             
     matrix_list = []
     for i in range(maxstep):
@@ -29,7 +31,7 @@ def get_matrix_data(file_name = None):
     if(file_name is None):
         files = os.listdir('./')
         for data_file in files:
-            if("matrix" in data_file):
+            if("matrix_" in data_file):
                 file_name = data_file
                 break
         if(file_name is None):
@@ -50,7 +52,7 @@ def show_generate_matrix():
     dim_str = None
 
     for data_file in files:
-        if("matrix" in data_file):
+        if("matrix_" in data_file):
             matrix_set = np.fromfile(data_file,dtype = np.int)
             dim_str = data_file.split("_")
 
@@ -70,7 +72,7 @@ def show_generate_path():
     dim_str = None
 
     for data_file in files:
-        if("path" in data_file):
+        if("path_" in data_file):
             path_set = np.fromfile(data_file,dtype = np.int)
             dim_str = data_file.split("_")
 
@@ -82,6 +84,15 @@ def show_generate_path():
     print(path_set)
     return
 
+
+def clean_old_path():
+    files = os.listdir('./')
+    
+    for data_file in files:
+        if("path_" in data_file):
+            os.remove(data_file)
+
+    return
 
 if __name__ == '__main__':
     generate_random_matrix(50,50,100,False)
@@ -110,6 +121,9 @@ if __name__ == '__main__':
                 next_step.append(path[1])
         
         path_set.append(next_step)
+
+
+    clean_old_path()
 
     file_name = "path_" + str(dim[0]) + "_" + str(max_vertex_number)
     path_set = np.array(path_set)
