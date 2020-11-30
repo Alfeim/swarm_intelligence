@@ -2,22 +2,48 @@ import numpy as np
 import os
 import dijkstra as path_generator
 import time
+import copy
+import random
+
+trainning_unvaliable_value = 255
+calculate_unavaliable_value = 8096
+max_radium = 4
+frequency = 0.3
+
+def generate_etreme_cases(matrix,rows,cols,max_count):
+    value = random.random()
+
+    if(value > frequency):
+        return matrix
+
+    max_count = random.randint(1,max_count)
+    max_number = rows * cols
+
+    for i in range(max_count):
+        current_number = random.randint(1,max_number)
+        radium = random.randint(1,max_radium)
+        x = (current_number - 1) // cols
+        y = (current_number - 1) % cols
+        matrix[x:min(rows - 1,x + radium - 1),y:min(cols - 1,y + radium - 1)] = trainning_unvaliable_value
+    
+    return matrix
+
 
 #generate some matrix as trainning data
-def generate_random_matrix(rows,cols,levels,force = True,maxstep = 10000):
-    files = os.listdir('./')
-    for data_file in files:
-            if("matrix_" in data_file and force == False):
-                return None
-            else
-                os.remove(data_file)
-            
+def generate_random_matrix(rows,cols,levels,force = True,maxstep = 1):
     matrix_list = []
+    milestone = maxstep // 100
+
+    print("\n**********start to generate raw matrix set**********\n")
     for i in range(maxstep):
-        if(i % (maxstep//10) == 0):
-            print("complete: {}%".format(i*100//maxstep))
         current_matrix = np.random.randint(1,levels + 1,(rows,cols))
+        current_matrix = generate_etreme_cases(current_matrix,rows,cols,6)
         matrix_list.append(current_matrix)
+
+        if(maxstep < 100):
+            print("generation progress: {}%".format((i + 1) *100//maxstep))
+        else if((i + 1) %  milestone == 0):
+            print("generation progress: {}%".format((i + 1)//milestone))
 
     matrix_set = np.array(matrix_list)
     dim = matrix_set.shape
@@ -87,15 +113,20 @@ def show_generate_path():
 
 def clean_old_path():
     files = os.listdir('./')
-    
     for data_file in files:
         if("path_" in data_file):
             os.remove(data_file)
 
     return
 
+
+def replace_unavaliable_value(matrix,rows,cols):
+    matrix[matrix >= trainning_unvaliable_value] = calculate_unavaliable_value
+    return matrix
+
+
 if __name__ == '__main__':
-    generate_random_matrix(50,50,100,False)
+    generate_random_matrix(100,100,100,False)
     matrix_set = get_matrix_data()
     dim = matrix_set.shape
     max_vertex_number = dim[1] * dim[2]
@@ -103,14 +134,13 @@ if __name__ == '__main__':
     milestone = dim[0]/100
 
     time_start = time.time()
+    
+    print("\n*********start to calculate********** ")
     for i in range(dim[0]):
-        if(i % milestone == 0):
-            print("progress:{}%".format(i/milestone))
-
-        current_matrix = matrix_set[i]
+        current_matrix = replace_unavaliable_value(matrix_set[i],dim[1],dim[2])
         vList = path_generator.relax(current_matrix)
         source_index = path_generator.get_source_number(current_matrix)
-    
+
         #INDEX i in next_step[] stands for the next step if we want move from index i to source_index(means destination)
         next_step = []
         for j in range(1,max_vertex_number + 1):
@@ -119,8 +149,15 @@ if __name__ == '__main__':
                 next_step.append(source_index)
             else:
                 next_step.append(path[1])
-        
+
         path_set.append(next_step)
+        
+        if((i + 1) % milestone == 0):
+            print("progress:{}%".format((i + 1)//milestone))
+        
+        if(dim[0] < 100):
+            print("progress:{}%".format((i + 1)*100/dim[0]))
+
 
 
     clean_old_path()
@@ -136,7 +173,6 @@ if __name__ == '__main__':
     minutes = (period - hours*3600)//60
     seconds = period - hours*3600 - minutes*60
     print("totally cost {0}hours,{1}minites,{2}seconds)".format(hours,minutes,seconds))
-  
-   #show_generate_matrix()
-   #show_generate_path()
+    #show_generate_matrix()
+    #show_generate_path()
 

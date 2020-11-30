@@ -35,25 +35,25 @@ def create_all_vertex(matrix):
             if(i - 1 >= 0):
                 neighbor_number = current_number - max_col
                 if not(edges.__contains__((current_number,neighbor_number))):
-                    add_edges(current_number,neighbor_number,matrix[i][j],edges)
+                    add_edges(current_number,neighbor_number,matrix[i - 1][j],edges)
                 neighbors.append(neighbor_number)
 
             if(i + 1 < max_row):
                 neighbor_number = current_number + max_col
                 if not(edges.__contains__((current_number,neighbor_number))):
-                    add_edges(current_number,neighbor_number,matrix[i][j],edges)
+                    add_edges(current_number,neighbor_number,matrix[i + 1][j],edges)
                 neighbors.append(neighbor_number)
 
             if(j - 1 >= 0):
                 neighbor_number = current_number - 1
                 if not(edges.__contains__((current_number,neighbor_number))):
-                    add_edges(current_number,neighbor_number,matrix[i][j],edges)
+                    add_edges(current_number,neighbor_number,matrix[i][j - 1],edges)
                 neighbors.append(neighbor_number)
 
             if(j + 1 < max_col):
                 neighbor_number = current_number + 1
                 if not(edges.__contains__((current_number,neighbor_number))):
-                    add_edges(current_number,neighbor_number,matrix[i][j],edges)
+                    add_edges(current_number,neighbor_number,matrix[i][j + 1],edges)
                 neighbors.append(neighbor_number)
 
             current_vertex = Vertex(current_number,neighbors)
