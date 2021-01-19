@@ -19,7 +19,7 @@ class Vertex:
 def add_edges(start,end,value,edges):
     edges[(start,end)] = value
 
-def create_all_vertex(matrix):
+def create_all_vertex(matrix,src=None):
     dim = matrix.shape
     max_row = dim[0]
     max_col = dim[1]
@@ -59,7 +59,7 @@ def create_all_vertex(matrix):
             current_vertex = Vertex(current_number,neighbors)
             vList.append(current_vertex)
 
-            if( current_number == get_source_number(matrix)):
+            if(src != None and current_number == src):
                 source = current_vertex
 
     vList.insert(0,False)
@@ -94,8 +94,8 @@ def get_unknown_min(vList,vSet):
     return vList[the_index]
 
 
-def relax(matrix):
-    vList,vSet,source,edges = create_all_vertex(matrix)
+def relax(matrix,src=None):
+    vList,vSet,source,edges = create_all_vertex(matrix,src)
     source.dist = 0
 
     while(len(vSet)!=0):
@@ -130,6 +130,7 @@ def get_shortest_path(start,index,vList):
 
     get_traj(index)
     return traj_list
+
 
 """
 matrix = np.random.randint(1,100,(20,20))
