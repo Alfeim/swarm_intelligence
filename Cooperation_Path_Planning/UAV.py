@@ -55,7 +55,7 @@ class UAV(threading.Thread):
         self.move_record = []
 
         self.working = True
-        self.multi_levels = True
+        self.multi_levels = False
         self.addWeight = True
         self.weight_regression = True
 
@@ -202,7 +202,7 @@ class UAV(threading.Thread):
     """
     To update higher level map by map of level 0
     """
-    def update_all_level_maps(self):
+    def update_all_level_maps(self,maxpool=False):
         def get_matrix_sum(matrix,row,col):
             ret = 0
             for i in range(row):
@@ -232,7 +232,7 @@ class UAV(threading.Thread):
                     matrix = last_grid[k:k+self.pool_step,m:m+self.pool_step]
                     time_matrix = last_time_grid[k:k+self.pool_step,m:m+self.pool_step]
                     avg = get_matrix_sum(matrix,self.pool_step,self.pool_step)//(self.pool_step*self.pool_step)
-                    current_grid[k][m] = avg
+                    current_grid[k][m] = get_matrix_max(matrix,self.pool_step,self.pool_step) if maxpool is True else avg
                     current_time_grid[k][m] = get_matrix_max(time_matrix,self.pool_step,self.pool_step)
 
 
@@ -287,8 +287,7 @@ class UAV(threading.Thread):
 
         _,_,new_grid_number= self.get_src_grid_position(self.max_level)
        
-        if(len(self.move_record) > 0 and (new_grid_number != self.move_record[-1][2])):
-            self.move_record.append([self.position[0],self.position[1],new_grid_number])
+        self.move_record.append([self.position[0],self.position[1],new_grid_number])
 
         if(current_grid_number != new_grid_number):
             self.path_tree.removeNode(self.max_level,0)

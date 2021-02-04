@@ -197,22 +197,21 @@ while(i < 100):
     global_map = (np.multiply(global_map,255.0/(2.58*2)) + 127.5).astype(np.uint8)
     uav_6.initialize_global_information(global_map)
     uav_6.update_all_level_maps()
-    uav_6.position[0] = random.randint(1,wide-1)
-    uav_6.position[1] = random.randint(1,wide-1)
+    uav_6.position[0] = 0
+    uav_6.position[1] = 0
 
     uav_7 = UAV.UAV(7,'./config.json',logger)
     uav_7.initialize_global_information(global_map)
-    uav_7.update_all_level_maps()
+    uav_7.update_all_level_maps(maxpool=True)
     uav_7.position[0] = uav_6.position[0]
     uav_7.position[1] = uav_6.position[1]
     uav_6.multi_levels = False
     uav_7.multi_levels = True
 
 
-    border =uav_6.config['height']*uav_6.config['height']
-    dst = random.randint(1,border)
-    uav_6.reset_destination(dst)
-    uav_7.reset_destination(dst)
+    border =uav_6.config['width']*uav_6.config['height']
+    uav_6.reset_destination(border)
+    uav_7.reset_destination(border)
 
     time6_start = time.time()
     uav_6.path_planning()
