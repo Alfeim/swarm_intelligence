@@ -63,6 +63,9 @@ class UAV(threading.Thread):
         self.change_step = self.config['change_step']
         self.openPrint = True
 
+        self.use_deep_learning = True
+        self.stradegy_cost = 0
+
         for i in range(1,self.max_level + 1):
             pool_ratio = pow(self.pool_step,(i - 1))
             width = (int)(self.config['width']//pool_ratio)
@@ -315,7 +318,7 @@ class UAV(threading.Thread):
     """
     To determin whether doing path planing or not
     """
-    def stradegy_switch(self):
+    def stradegy_switch(self,model=None):
         def get_path_around_sum(number,matrix,rows,cols,used,ttf):
             if(ttf < 0): return 0
 
@@ -350,6 +353,9 @@ class UAV(threading.Thread):
     
         if(self.last_path_maps is None):
             self.last_path_maps = self.maps[0][0]
+            return True
+
+        if(self.use_deep_learning is True or model is None)
             return True
 
         rows = self.config['width']
@@ -538,7 +544,7 @@ class UAV(threading.Thread):
             level += 1
            
 
-        self.last_path_maps = self.maps[0][0]
+        self.last_path_maps = copy.deepcopy(self.maps[0][0])
 
         return
 

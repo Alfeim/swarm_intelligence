@@ -43,7 +43,7 @@ def build_network(input,IF_TRAIN=True,IF_COUNT_MAX_AND_MIN=False):
     datamax = tf.constant([0.0],dtype = tf.float32)
      # 卷积层1        64个1x1的卷积核（1通道），padding=’SAME’，表示padding后卷积的图与原图尺寸一致，激活函数relu()
     with tf.variable_scope('layer1_conv'):
-        kernel = weight_variable([3,3,2,64],1.0)
+        kernel = weight_variable([1,1,2,64],1.0)
         biases = bias_variable(0.1,[64])
         tmpconv =  conv2d(input, kernel,[1,1,1,1])+ biases
         bn1 = bn_layer(tmpconv,IF_TRAIN)

@@ -3,7 +3,7 @@ import glob
 import numpy as np
 
 def read_img(path,CHANNELS,ratio):
-    matrix_set_path = path + 'matrix_25000_10_10_2'
+    matrix_set_path = path + 'matrix_2500_10_10_2'
     label_set_path = path + 'labels'
     
     raw_matrix = np.fromfile(matrix_set_path,dtype = np.uint8)
@@ -58,7 +58,7 @@ def bulid_batch(image, label, batch_size):
     return np.asarray(image_batch),np.asarray(label_batch)
 
 def get_eval_image(path,batch_size):
-    matrix_set_path = path + 'matrix_2500_10_10_2'
+    matrix_set_path = path + 'matrix_2500_25_25_3'
     label_set_path = path + 'labels'
     
     raw_matrix = np.fromfile(matrix_set_path,dtype = np.uint8)
