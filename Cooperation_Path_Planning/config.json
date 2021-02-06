@@ -1,1 +1,1 @@
-{"width":10,"height":10,"pool_step":5,"max_path_tree_level":1,"signal_range_square":100,"speed":4,"grid_size":5,"bias_live_time":3,"bias_max":120,"regression_time":3,"regression_value":125}
+{"width":10,"height":10,"pool_step":5,"max_path_tree_level":1,"signal_range_square":100,"speed":4,"grid_size":5,"bias_live_time":3,"bias_max":7,"regression_time":25,"regression_value":125,"change_step":0.5}

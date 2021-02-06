@@ -2,15 +2,13 @@ DivideLineLength = 20
 class Logger:
     """The logger class
     
-    if the global parm OpenLogger is True,then the logger
-    istance will write to files
-    
     Attributes:
         file: the log file
     """
 
     def __init__(self, output_file='./Log.txt'):
         self.file = None
+        self.openLogger = True
         try:
             self.file = open(output_file, 'w+')
         except:
@@ -24,10 +22,16 @@ class Logger:
             return
 
     def log(self, msg):
+        if(self.openLogger is False):
+            return
+        
         if(self.file is not None):
             self.file.writelines(msg + '\n')
 
     def logDivideLine(self, msg, length=DivideLineLength, head=True):
+        if(self.openLogger is False):
+            return
+        
         if(self.file is None):
             return
         while(length < len(msg)):

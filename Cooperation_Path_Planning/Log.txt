@@ -1,6 +1,6 @@
-[notice]uav_6 change_destination from 0 to 100
+[notice]uav_6 change_destination from 0 to 625
 uav 6's last move record is []
-[notice]uav_7 change_destination from 0 to 100
+[notice]uav_7 change_destination from 0 to 625
 uav 7's last move record is []
 [notice]uav_6 is doing path planing
 [notice]uav_7 is doing path planing

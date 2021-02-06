@@ -206,8 +206,11 @@ while(i < 100):
     uav_7.position[0] = uav_6.position[0]
     uav_7.position[1] = uav_6.position[1]
     uav_6.multi_levels = False
+    uav_6.addWeight = False
     uav_7.multi_levels = True
-
+    uav_7.addWeight = False
+    uav_6.weight_regression = False
+    uav_7.weight_regression = False
 
     border =uav_6.config['width']*uav_6.config['height']
     uav_6.reset_destination(border)

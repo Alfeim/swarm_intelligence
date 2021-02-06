@@ -7,7 +7,9 @@ import json
 import stradegy
 import pathTree
 import copy
+import random
 from loger import Logger
+
 
 
 class UAV(threading.Thread):
@@ -55,9 +57,11 @@ class UAV(threading.Thread):
         self.move_record = []
 
         self.working = True
-        self.multi_levels = False
+        self.multi_levels = True
         self.addWeight = True
         self.weight_regression = True
+        self.change_step = self.config['change_step']
+        self.openPrint = True
 
         for i in range(1,self.max_level + 1):
             pool_ratio = pow(self.pool_step,(i - 1))
@@ -88,6 +92,12 @@ class UAV(threading.Thread):
         for i in range(width):
             for j in range(height):
                 self.maps[0][0][i][j] = global_map[i][j]
+                if(self.weight_regression is True):
+                    raw_value = self.maps[0][0][i][j]
+                    change_value = raw_value*self.change_step
+                    final_value = random.randint(0,int(change_value)) - change_value//2 + raw_value
+                    final_value = min(255,max(0,final_value))
+                    self.maps[0][0][i][j] = final_value
 
     """
     To update one skip neighbor information
@@ -258,11 +268,13 @@ class UAV(threading.Thread):
         if(next_grid_number == current_grid_number):
             next_grid_number = self.path_tree.getNodeNumber(self.max_level,1)
         
-        print("current_grid_number %d, next grid number:%d"%(current_grid_number,next_grid_number))
+        if(self.openPrint):
+            print("current_grid_number %d, next grid number:%d"%(current_grid_number,next_grid_number))
         next_grid_center_x = ((next_grid_number - 1)//cols)*grid_size + grid_size//2
         next_grid_center_y = ((next_grid_number - 1)%cols)*grid_size + grid_size//2
         
-        print("node %d move from (%d,%d) to (%d,%d)"%(self.uid,current_grid_x,current_grid_y,next_grid_center_x,next_grid_center_y))
+        if(self.openPrint):
+            print("node %d move from (%d,%d) to (%d,%d)"%(self.uid,current_grid_x,current_grid_y,next_grid_center_x,next_grid_center_y))
         x_offset = 0
         y_offset = 0
         
@@ -388,7 +400,7 @@ class UAV(threading.Thread):
     @level: current level
     """
     def convergence(self,src,dst,level,matrix_added_weight = None):
-        input_matrix = matrix_added_weight if (level == self.max_level and self.multi_levels is True) else self.maps[self.max_level-level][0]
+        input_matrix = matrix_added_weight if (level == self.max_level) else self.maps[self.max_level-level][0]
         
         if(level == 1 or self.multi_levels is False):
             #if current level is 1,there would not be father grids
@@ -516,6 +528,7 @@ class UAV(threading.Thread):
                             bias_time_swap = v
                             weight = int(self.config['bias_max']) * (int(self.config['bias_live_time']) - (self.time_swap - bias_time_swap))
                             matrix[x][y] = min(int(weight) + matrix[x][y],255)
+
 
             if(self.multi_levels is False and level != self.max_level):
                 level += 1
